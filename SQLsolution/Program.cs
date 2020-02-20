@@ -8,7 +8,19 @@ namespace SQLsolution {
 
             var sqllib = new BcConnection();
             sqllib.Connect(@"localhost\sqlexpress", "EdDb", "trusted_connection=true");
+            MajorController.bcConnection = sqllib;
+
+            var majors = MajorController.GetAllMajors();
+            foreach(var major in majors) {
+                Console.WriteLine(major);
+            }
+            
+            
+            
+            
             StudentController.bcConnection = sqllib;
+
+
 
             //var newStudent = new Student {
             //    Id = 443,
@@ -28,17 +40,25 @@ namespace SQLsolution {
             } else {
                 Console.WriteLine(student);
             }
-            student.Firstname = "Charlie";
-            student.Lastname = "Chan";
-            var success = StudentController.UpdateStudent(student);
+           // student.Firstname = "Charlie";
+            //student.Lastname = "Chan";
+            //var success = StudentController.UpdateStudent(student);
+
+            var studentToDelete = new Student {
+                Id = 999
+            };
+           // success = StudentController.DeleteStudent(999);
+
+            //var student1 = StudentController.DeleteStudent(888);
 
             //var student = new Student(sqllib);
             var students = StudentController.GetAllStudents();
             foreach(var student0 in students) {
                 Console.WriteLine(student0);
             }
-            sqllib.Disconnect();
 
+            
+            sqllib.Disconnect();
 
 
         }
