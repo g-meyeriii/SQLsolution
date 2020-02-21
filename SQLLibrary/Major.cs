@@ -11,5 +11,9 @@ namespace SQLLibrary {
         public override string ToString() {
             return $"{Id}|{Description}| {MinSat}";
         }
+
+        internal void Add(List<Major> specmajor) {
+            throw new NotImplementedException();
+        }
     }
 }

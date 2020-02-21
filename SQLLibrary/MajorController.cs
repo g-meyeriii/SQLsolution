@@ -8,6 +8,14 @@ namespace SQLLibrary {
 
         public static BcConnection bcConnection { get; set; } //Contains the sql connection
 
+        private static Major LoadMajorInstance(SqlDataReader reader) {
+            var major = new Major();
+            major.Id = Convert.ToInt32(reader["Id"]);
+            major.Description = reader["Description"].ToString();
+            major.MinSat = Convert.ToInt32(reader["MinSat"]);
+            return major;
+        }
+        
         public static List<Major> GetAllMajors() {
             var sql = "SELECT* From Major;";
             var command = new SqlCommand(sql, bcConnection.Connection);
@@ -20,38 +28,75 @@ namespace SQLLibrary {
             }
             var majors = new List<Major>();
             while (reader.Read()) {
-                var major = new Major();
-                major.Id = Convert.ToInt32(reader["Id"]);
-                major.Description = reader["Description"].ToString();
-                major.MinSat = Convert.ToInt32(reader["MinSat"]);
+                var major = LoadMajorInstance(reader); //Created the method created above to obsolete the code below
+                //var major = new Major();
+                //major.Id = Convert.ToInt32(reader["Id"]);
+                //major.Description = reader["Description"].ToString();
+                //major.MinSat = Convert.ToInt32(reader["MinSat"]);
                 majors.Add(major);
             }
             reader.Close();
             reader = null;
             return majors;
         }
-
-        public static Major GetByMajorId(string Desciption) {
-            var sql = "SELECT* From Major Where description = @description ";
-            var command = new SqlCommand(sql, bcConnection.Connection);
-            var reader = command.ExecuteReader();
+        public static Major GetMajorByPk(int id) {
+            var sql = "Select* From Major where Id = @Id";
+            var commmand = new SqlCommand(sql, bcConnection.Connection);
+            commmand.Parameters.AddWithValue("@Id", id);
+            var reader = commmand.ExecuteReader();
             if (!reader.HasRows) {
-                Console.WriteLine("No rows for GetByMajorId");
                 reader.Close();
                 reader = null;
-                return new List<Major>();
+                return null;
             }
-            var majors = new List<Major>();
-            while (reader.Read());
-            var specmajor = new Major();
-            major.Id = Convert.ToInt32(reader["Id"]);
-            ma
+            reader.Read();
+            var major = LoadMajorInstance(reader);
+            //var major = new Major();
+            //major.Id = Convert.ToInt32(reader["Id"]);
+            //major.Description = reader["Description"].ToString();
+            //major.MinSat = Convert.ToInt32(reader["MinSat"]);
+
             reader.Close();
             reader = null;
             return major;
-            }
-
             
+        }
 
+        public bool InsertMajor(Major major) {
+            var sql = $" Insert into Major (Id, Description, MinSat)" +
+                $"Values(@Id,@Descripton,@MinSat)";
+            var command = new SqlCommand(sql, bcConnection.Connection);
+            command.Parameters.AddWithValue("@Id", major.Id);
+            command.Parameters.AddWithValue("@Description", major.Description);
+            command.Parameters.AddWithValue("@Minsat", major.MinSat);
+
+            var recsAffected = command.ExecuteNonQuery();
+            if (recsAffected != 1) {
+                throw new Exception("Insert Failed");
+            }
+            return true;
+        }
+        public bool DeleteMajor(Major major) {
+            var sql = $"Delete From Major where Id = @Id";
+            var command = new SqlCommand(sql, bcConnection.Connection);
+            command.Parameters.AddWithValue("@Id", major.Id);
+            var recsAffected = command.ExecuteNonQuery();
+            if (recsAffected != 1) {
+                throw new Exception("Delete Failed");
+            }
+            return true;
+        }
+
+        //public static bool UpdateMajor(Major major);
+        //var sql = "Update Major Set "+
+        //public static bool DeleteMajor(int id) {
+        //    var student = GetMajorByPk(id);
+        //    if (student == null) {
+        //        return false;
+        //    }
+        //    //var success = DeleteMajor(major);
+        //    //return true;
+        }
     }
-}
+
+

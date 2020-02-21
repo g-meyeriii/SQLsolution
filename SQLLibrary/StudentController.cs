@@ -9,6 +9,17 @@ namespace SQLLibrary {
 
         public static BcConnection bcConnection { get; set; }
 
+        private static Student LoadStudentInstance (SqlDataReader reader) {
+            var student = new Student();
+            student.Id = Convert.ToInt32(reader["Id"]);
+            student.Firstname = reader["Firstname"].ToString();
+            student.Lastname = reader["Lastname"].ToString();
+            student.SAT = Convert.ToInt32(reader["SAT"]);
+            student.GPA = Convert.ToInt32(reader["GPA"]);
+            student.MajorId = Convert.ToInt32(reader["MajorId"]);
+            return student;
+        }
+
         public static List<Student> GetAllStudents() {
             var sql = "Select* From Student s Left Join Major m on m.Id = s.MajorId"; //Test in SSMS first
             var command = new SqlCommand(sql, bcConnection.Connection);
@@ -22,12 +33,13 @@ namespace SQLLibrary {
             
             var students = new List<Student>();
             while (reader.Read()) {
-                var student = new Student();
-                student.Id = Convert.ToInt32(reader["Id"]);
-                student.Firstname = reader["Firstname"].ToString();
-                student.Lastname = reader["Lastname"].ToString();
-                student.SAT = Convert.ToInt32(reader["SAT"]);
-                student.GPA = Convert.ToInt32(reader["GPA"]);
+                var student = LoadStudentInstance(reader); // Created the above method, to obsolete the code below
+                //var student = new Student();
+                //student.Id = Convert.ToInt32(reader["Id"]);
+                //student.Firstname = reader["Firstname"].ToString();
+                //student.Lastname = reader["Lastname"].ToString();
+                //student.SAT = Convert.ToInt32(reader["SAT"]);
+                //student.GPA = Convert.ToInt32(reader["GPA"]);
                 //student.MajorId = Convert.ToInt32(reader["MajorId"]);
                 if (Convert.IsDBNull(reader["Description"])) {
                     student.Major = null;
@@ -53,12 +65,13 @@ namespace SQLLibrary {
                 return null;
             }
             reader.Read();
-            var student = new Student();
-            student.Id = Convert.ToInt32(reader["Id"]);
-            student.Firstname = reader["Firstname"].ToString();
-            student.Lastname = reader["Lastname"].ToString();
-            student.SAT = Convert.ToInt32(reader["SAT"]);
-            student.GPA = Convert.ToInt32(reader["GPA"]);
+            var student = LoadStudentInstance(reader);
+            //var student = new Student();
+            //student.Id = Convert.ToInt32(reader["Id"]);
+            //student.Firstname = reader["Firstname"].ToString();
+            //student.Lastname = reader["Lastname"].ToString();
+            //student.SAT = Convert.ToInt32(reader["SAT"]);
+            //student.GPA = Convert.ToInt32(reader["GPA"]);
             //student.MajorId = Convert.ToInt32(reader["MajorId"]);
 
             reader.Close();//Closing out reader, it is a expesive, but less than connection to sql
@@ -69,8 +82,6 @@ namespace SQLLibrary {
         }
 
         public static bool InsertStudent(Student student) {
-
-
             //#error stops running code. Using string interpolation for SQL statements is not good practice      
             var sql = $"Insert into Student (Id, Firstname, Lastname, SAT, GPA, MajorId)" +
                     $"VALUES(@Id, @Firstname, @Lastname,@SAT, @GPA, @Majorid);";
