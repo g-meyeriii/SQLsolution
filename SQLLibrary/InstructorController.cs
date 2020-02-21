@@ -8,14 +8,16 @@ namespace SQLLibrary {
 
         public static BcConnection bcConnection { get; set; }
 
-        private static LoadInstructorInstance(SqlDataReader reader) {
+        private static Instructor LoadInstructorInstance(SqlDataReader reader) {
             var instructor = new Instructor();
             instructor.Id = Convert.ToInt32(reader["Id"]);
             instructor.Firstname = reader["FirstName"].ToString();
             instructor.Lastname = reader["Lastname"].ToString();
             instructor.YearsExperience = Convert.ToInt32(reader["YearsExperience"]);
-            //instructor.IsTenure = Convert.IsDBNull(["IsTenured"]);
+            instructor.IsTenure = Convert.ToBoolean(reader["IsTenured"]);
+            return instructor;
         }
+
 
         public static List<Instructor> GetAllInstructors() {
             var sql = "Select* From Instructor";
@@ -27,7 +29,10 @@ namespace SQLLibrary {
                 reader = null;
                 return List<Instructor>;
             }
-        public 
+            var instructor = new List<Instructor>();
+            while (reader.Read()) {
+                var Instructor = LoadInstructorInstance(reader);
+                
         }
 
     }
