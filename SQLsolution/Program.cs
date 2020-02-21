@@ -17,6 +17,7 @@ namespace SQLsolution {
 
             var major = MajorController.GetMajorByPk(1);
             Console.WriteLine(major);
+
             
             
             StudentController.bcConnection = sqllib;

@@ -4,7 +4,7 @@ using System.Text;
 using System.Data.SqlClient;
 
 namespace SQLLibrary {
-    public class MajorController {
+    public class  MajorController {
 
         public static BcConnection bcConnection { get; set; } //Contains the sql connection
 
@@ -76,8 +76,26 @@ namespace SQLLibrary {
             }
             return true;
         }
+
+        public static bool UpdateMajor(Major major) {
+            var sql = "Update Major Set" +
+                        " Id = @Id ," +
+                        " Description = @Description " +
+                        " MinSat = @MinSat ";
+            var command = new SqlCommand(sql, bcConnection.Connection);
+            command.Parameters.AddWithValue("@Id", major.Id);
+            command.Parameters.AddWithValue("@Description", major.Description);
+            command.Parameters.AddWithValue("@MinSat", major.MinSat);
+
+            var resAffected = command.ExecuteNonQuery();
+            if(resAffected != 1) {
+                throw new Exception("Update Failed");
+            }
+            return true;
+
+        }
         public bool DeleteMajor(Major major) {
-            var sql = $"Delete From Major where Id = @Id";
+            var sql = "Delete From Major where Id = @Id";
             var command = new SqlCommand(sql, bcConnection.Connection);
             command.Parameters.AddWithValue("@Id", major.Id);
             var recsAffected = command.ExecuteNonQuery();
@@ -86,17 +104,20 @@ namespace SQLLibrary {
             }
             return true;
         }
-
-        //public static bool UpdateMajor(Major major);
-        //var sql = "Update Major Set "+
         //public static bool DeleteMajor(int id) {
-        //    var student = GetMajorByPk(id);
-        //    if (student == null) {
+        //    var sql = "Delete From Major where Id = @Id";
+        //    var command = new SqlCommand(sql, bcConnection.Connection);
+        //    var major = GetMajorByPk(id);
+        //    if(major == null) {
         //        return false;
-        //    }
-        //    //var success = DeleteMajor(major);
-        //    //return true;
-        }
+               
+            
+
+            //var success = DeleteMajor(major);
+            //return true;
+        
+    
     }
+}
 
 
