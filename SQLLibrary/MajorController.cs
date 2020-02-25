@@ -79,7 +79,7 @@ namespace SQLLibrary {
 
         public static bool UpdateMajor(Major major) {
             var sql = "Update Major Set" +
-                        " Id = @Id ," +
+                        " Id = @Id " +
                         " Description = @Description " +
                         " MinSat = @MinSat ";
             var command = new SqlCommand(sql, bcConnection.Connection);

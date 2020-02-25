@@ -103,12 +103,12 @@ namespace SQLLibrary {
         }
         public static bool UpdateStudent(Student student) {
             var sql = "UPDATE Student Set " +
-                        " Firstname = @Firstname, " +
-                        " Lastname = @Lastname, " +
-                        " SAT = @SAT, " +
-                        " GPA = @GPA, " +
+                        " Firstname = @Firstname " +
+                        " Lastname = @Lastname " +
+                        " SAT = @SAT " +
+                        " GPA = @GPA " +
                         " MajorId = @MajorId " +
-                        " Where Id = @Id; ";
+                        " Where Id = @Id ";
 
             var command = new SqlCommand(sql, bcConnection.Connection);
             command.Parameters.AddWithValue("@Id", student.Id);
