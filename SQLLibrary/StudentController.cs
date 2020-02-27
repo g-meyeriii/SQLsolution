@@ -6,7 +6,7 @@ using System.Text;
 namespace SQLLibrary {
     public class StudentController {//Student class to call the database, removing the things that shouldn't be there
 
-
+//********This is the way if not using entity framework****************
         public static BcConnection bcConnection { get; set; }
 
         private static Student LoadStudentInstance (SqlDataReader reader) {
